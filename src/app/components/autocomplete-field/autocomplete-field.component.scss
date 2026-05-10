@@ -1,3 +1,36 @@
+.form__label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.form__input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.form__input:focus {
+  border-color: #c084fc;
+}
+
+.form__error {
+  display: block;
+  color: #f5576c;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
 .autocomplete-field {
   position: relative;
   width: 100%;
@@ -5,6 +38,10 @@
 
 .autocomplete-field__wrapper {
   position: relative;
+}
+
+.autocomplete-field__wrapper .form__input {
+  padding-right: 40px;
 }
 
 .autocomplete-field__clear {

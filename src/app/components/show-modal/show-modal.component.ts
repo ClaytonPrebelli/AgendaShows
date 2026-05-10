@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { DIALOG_DATA, DialogRef, Dialog } from '@angular/cdk/dialog';
 import { ShowService } from '../../services/show.service';
 import { ContratanteService } from '../../services/contratante.service';
 import { LocalService } from '../../services/local.service';
@@ -49,7 +49,8 @@ export class ShowModalComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(DIALOG_DATA) public data: ModalData,
-    private dialogRef: DialogRef<ShowModalComponent, ModalResult>,
+    private dialogRef: DialogRef<ModalResult>,
+    private dialog: Dialog,
     private fb: FormBuilder,
     private showService: ShowService,
     private contratanteService: ContratanteService,
@@ -108,7 +109,7 @@ export class ShowModalComponent implements OnInit, OnDestroy {
   }
 
   openAddContratante(): void {
-    const dialogRef = this.dialogRef.dialog.open(CreateEntityDialogComponent, {
+    const ref = this.dialog.open(CreateEntityDialogComponent, {
       data: {
         title: 'Novo Contratante',
         fieldLabel: 'Nome do Contratante',
@@ -116,7 +117,7 @@ export class ShowModalComponent implements OnInit, OnDestroy {
       } as CreateEntityData,
     });
 
-    dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
+    ref.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
       if (result) {
         this.contratanteService.create({ nome: result.nome }).pipe(takeUntil(this.destroy$)).subscribe(c => {
           this.selectedContratante = c;
@@ -126,7 +127,7 @@ export class ShowModalComponent implements OnInit, OnDestroy {
   }
 
   openAddLocal(): void {
-    const dialogRef = this.dialogRef.dialog.open(CreateEntityDialogComponent, {
+    const ref = this.dialog.open(CreateEntityDialogComponent, {
       data: {
         title: 'Novo Local',
         fieldLabel: 'Nome do Local',
@@ -134,7 +135,7 @@ export class ShowModalComponent implements OnInit, OnDestroy {
       } as CreateEntityData,
     });
 
-    dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
+    ref.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
       if (result) {
         this.localService.create({ nome: result.nome }).pipe(takeUntil(this.destroy$)).subscribe(l => {
           this.selectedLocal = l;

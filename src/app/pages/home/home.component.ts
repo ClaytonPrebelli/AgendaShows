@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Dialog } from '@angular/cdk/dialog';
 import { ShowService } from '../../services/show.service';
 import { Show } from '../../models/show.model';
 import { CurrencyPipe, DatePipe } from '@angular/common';
+import { ShowModalComponent, ModalData, ModalResult } from '../../components/show-modal/show-modal.component';
 import { Subject, takeUntil } from 'rxjs';
 
 interface CalendarDay {
@@ -60,7 +62,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private showService: ShowService) {}
+  constructor(
+    private showService: ShowService,
+    private dialog: Dialog,
+  ) {}
 
   ngOnInit(): void {
     this.load();
@@ -246,6 +251,28 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.dayGroups = groups.filter(g => g.shows.length > 0);
+  }
+
+  openAddShow(dateStr: string): void {
+    const dialogRef = this.dialog.open(ShowModalComponent, {
+      data: { mode: 'add', date: dateStr } as ModalData,
+    });
+    dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
+      if (result?.created) {
+        this.load();
+      }
+    });
+  }
+
+  openViewShow(show: Show): void {
+    const dialogRef = this.dialog.open(ShowModalComponent, {
+      data: { mode: 'view', show } as ModalData,
+    });
+    dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
+      if (result?.updated || result?.deleted) {
+        this.load();
+      }
+    });
   }
 
   togglePago(id: number): void {
