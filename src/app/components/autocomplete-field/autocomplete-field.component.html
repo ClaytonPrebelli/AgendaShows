@@ -1,0 +1,46 @@
+<div class="autocomplete-field" [class.autocomplete-field--focused]="focused">
+  <label class="form__label">{{ label }}</label>
+  <div class="autocomplete-field__wrapper">
+    <input
+      class="form__input"
+      type="text"
+      [formControl]="searchControl"
+      [placeholder]="placeholder"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+      autocomplete="off"
+    >
+    @if (selectedValue) {
+      <button type="button" class="autocomplete-field__clear" (mousedown)="clearSelection()" title="Limpar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    }
+    @if (loading) {
+      <span class="autocomplete-field__loader"></span>
+    }
+  </div>
+
+  @if (showDropdown) {
+    <div class="autocomplete-field__dropdown">
+      @for (item of filteredItems; track item.id) {
+        <div class="autocomplete-field__option" (mousedown)="selectItem(item)">
+          {{ item[displayField] }}
+        </div>
+      }
+      @if (filteredItems.length === 0) {
+        <div class="autocomplete-field__option autocomplete-field__option--empty">
+          Nenhum {{ label.toLowerCase() }} encontrado
+        </div>
+      }
+      <div class="autocomplete-field__option autocomplete-field__option--add" (mousedown)="onAddNew()">
+        + Adicionar novo {{ label.toLowerCase() }}
+      </div>
+    </div>
+  }
+
+  @if (required && !selectedValue && searchControl.touched) {
+    <span class="form__error">Campo obrigatório</span>
+  }
+</div>

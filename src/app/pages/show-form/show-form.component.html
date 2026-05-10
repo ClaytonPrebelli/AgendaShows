@@ -1,0 +1,122 @@
+<div class="form-page">
+  <div class="form-page__inner">
+    <a routerLink="/" class="back-link">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Voltar
+    </a>
+
+    <div class="form-card">
+      <div class="form-card__header">
+        <div class="form-card__icon">{{ isEditing ? '✏️' : '🎵' }}</div>
+        <h1 class="form-card__title">{{ isEditing ? 'Editar Show' : 'Novo Show' }}</h1>
+        <p class="form-card__subtitle">{{ isEditing ? 'Atualize as informações do show' : 'Registre um novo show na agenda' }}</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+        <div class="form__grid">
+          <div class="form__group form__group--full">
+            <app-autocomplete-field
+              label="Contratante"
+              placeholder="Digite para buscar contratante..."
+              [searchFn]="searchContratantes"
+              [selectedItem]="selectedContratante"
+              [initialLabel]="initialContratanteNome"
+              (selected)="onContratanteSelected($event)"
+              (addNew)="openAddContratante()"
+            ></app-autocomplete-field>
+          </div>
+
+          <div class="form__group form__group--full">
+            <app-autocomplete-field
+              label="Local do Show"
+              placeholder="Digite para buscar local..."
+              [searchFn]="searchLocais"
+              [selectedItem]="selectedLocal"
+              [initialLabel]="initialLocalNome"
+              (selected)="onLocalSelected($event)"
+              (addNew)="openAddLocal()"
+            ></app-autocomplete-field>
+          </div>
+
+          <div class="form__group">
+            <label class="form__label">Data</label>
+            <input class="form__input" type="date" formControlName="data">
+            @if (form.get('data')?.invalid && form.get('data')?.touched) {
+              <span class="form__error">Campo obrigatório</span>
+            }
+          </div>
+
+          <div class="form__group">
+            <label class="form__label">Horário</label>
+            <input class="form__input" type="time" formControlName="hora">
+            @if (form.get('hora')?.invalid && form.get('hora')?.touched) {
+              <span class="form__error">Campo obrigatório</span>
+            }
+          </div>
+
+          <div class="form__group">
+            <label class="form__label">Duração</label>
+            <input class="form__input" type="text" formControlName="duracao" placeholder="Ex: 3h, 2h30">
+            @if (form.get('duracao')?.invalid && form.get('duracao')?.touched) {
+              <span class="form__error">Campo obrigatório</span>
+            }
+          </div>
+
+          <div class="form__group">
+            <label class="form__label">Valor Cobrado (R$)</label>
+            <input class="form__input" type="number" formControlName="valorCobrado" placeholder="0,00" step="0.01">
+            @if (form.get('valorCobrado')?.invalid && form.get('valorCobrado')?.touched) {
+              <span class="form__error">Valor obrigatório</span>
+            }
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__group form__group--checkbox">
+            <label class="checkbox">
+              <input type="checkbox" formControlName="pago">
+              <span class="checkbox__mark"></span>
+              <span>Show já foi pago</span>
+            </label>
+          </div>
+        </div>
+
+        @if (form.get('pago')?.value) {
+          <div class="form__group form__group--full">
+            <label class="form__label">Data de Pagamento</label>
+            <input class="form__input" type="date" formControlName="dataPagamento">
+          </div>
+        }
+
+        <div class="form__group form__group--full">
+          <label class="form__label">Forma de Pagamento</label>
+          <select class="form__input form__select" formControlName="formaPagamento">
+            <option value="">Selecione...</option>
+            @for (fp of formasPagamento; track fp) {
+              <option [value]="fp">{{ fp }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form__group form__group--full">
+          <label class="form__label">Estilos Musicais Solicitados</label>
+          <div class="chip-grid">
+            @for (estilo of estilosMusicais; track estilo) {
+              <label class="chip" [class.chip--selected]="selectedEstilos.includes(estilo)">
+                <input type="checkbox" [value]="estilo" [checked]="selectedEstilos.includes(estilo)" (change)="toggleEstilo(estilo)" class="chip__input">
+                {{ estilo }}
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="form__actions">
+          <button type="button" routerLink="/" class="btn btn--ghost">Cancelar</button>
+          <button type="submit" class="btn btn--primary" [disabled]="form.invalid">
+            {{ isEditing ? 'Salvar Alterações' : 'Cadastrar Show' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

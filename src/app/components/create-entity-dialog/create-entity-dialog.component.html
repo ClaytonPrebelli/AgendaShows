@@ -1,0 +1,25 @@
+<div class="modal">
+  <div class="modal__header">
+    <h2 class="modal__title">{{ data.title }}</h2>
+    <button class="modal__close" (click)="close()" title="Fechar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="modal__body">
+    <div class="form__group form__group--full">
+      <label class="form__label">{{ data.fieldLabel }}</label>
+      <input class="form__input" type="text" formControlName="nome" [placeholder]="data.fieldPlaceholder" autofocus>
+      @if (form.get('nome')?.invalid && form.get('nome')?.touched) {
+        <span class="form__error">Campo obrigatório</span>
+      }
+    </div>
+
+    <div class="modal__actions">
+      <button type="button" class="btn btn--ghost" (click)="close()">Cancelar</button>
+      <button type="submit" class="btn btn--primary" [disabled]="form.invalid">Adicionar</button>
+    </div>
+  </form>
+</div>
