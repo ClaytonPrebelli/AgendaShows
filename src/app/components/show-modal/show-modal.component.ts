@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { DIALOG_DATA, DialogRef, Dialog } from '@angular/cdk/dialog';
 import { ShowService } from '../../services/show.service';
@@ -30,6 +30,7 @@ export interface ModalResult {
   imports: [ReactiveFormsModule, CurrencyPipe, DatePipe, AutocompleteFieldComponent],
   templateUrl: './show-modal.component.html',
   styleUrl: './show-modal.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class ShowModalComponent implements OnInit, OnDestroy {
   mode: 'add' | 'view';
