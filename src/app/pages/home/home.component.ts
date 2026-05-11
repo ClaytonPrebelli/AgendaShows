@@ -5,6 +5,7 @@ import { ShowService } from '../../services/show.service';
 import { Show } from '../../models/show.model';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ShowModalComponent, ModalData, ModalResult } from '../../components/show-modal/show-modal.component';
+import { DayDetailDialogComponent, DayDetailData } from '../../components/day-detail-dialog/day-detail-dialog.component';
 import { Subject, takeUntil } from 'rxjs';
 
 interface CalendarDay {
@@ -291,6 +292,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.dayGroups = groups.filter(g => g.shows.length > 0);
+  }
+
+  onCellClick(cell: CalendarDay): void {
+    const dateStr = this.formatDateKey(cell.year, cell.month, cell.day);
+    const dateShows = this.showsByDate.get(dateStr);
+    if (dateShows && dateShows.length > 0) {
+      const dialogRef = this.dialog.open(DayDetailDialogComponent, {
+        data: { date: dateStr, shows: dateShows } as DayDetailData,
+      });
+      dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
+        if (result?.updated || result?.deleted) {
+          this.reload();
+        }
+      });
+    } else {
+      this.openAddShow(dateStr);
+    }
   }
 
   openAddShow(dateStr: string): void {

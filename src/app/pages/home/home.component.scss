@@ -443,9 +443,10 @@
   padding: 20px 0 8px;
 }
 .day-detail__empty-icon {
-  font-size: 2.5rem;
   display: block;
   margin-bottom: 12px;
+  color: rgba(255,255,255,0.3);
+  line-height: 0;
 }
 .day-detail__empty p {
   color: rgba(255,255,255,0.4);
