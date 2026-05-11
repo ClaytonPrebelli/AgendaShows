@@ -68,6 +68,8 @@ export class ShowModalComponent implements OnInit, OnDestroy {
       pago: [false],
       dataPagamento: [''],
       formaPagamento: [''],
+      necessitaNotaFiscal: [false],
+      notaEmitida: [false],
     });
   }
 
@@ -75,8 +77,12 @@ export class ShowModalComponent implements OnInit, OnDestroy {
     if (this.mode === 'view' && this.show) {
       this.form.patchValue(this.show);
       this.selectedEstilos = [...this.show.estilosSolicitados];
-      this.selectedContratante = { id: this.show.contratanteId, nome: this.show.contratanteNome };
-      this.selectedLocal = { id: this.show.localId, nome: this.show.localNome };
+      this.selectedContratante = this.show.contratanteId
+        ? { id: this.show.contratanteId, nome: this.show.contratanteNome || '' }
+        : null;
+      this.selectedLocal = this.show.localId
+        ? { id: this.show.localId, nome: this.show.localNome || '' }
+        : null;
       if (this.show.dataPagamento) {
         this.form.patchValue({ dataPagamento: this.show.dataPagamento });
       }
@@ -109,36 +115,52 @@ export class ShowModalComponent implements OnInit, OnDestroy {
     this.selectedLocal = local;
   }
 
-  openAddContratante(): void {
+  openAddContratante(term?: string): void {
     const ref = this.dialog.open(CreateEntityDialogComponent, {
       data: {
         title: 'Novo Contratante',
-        fieldLabel: 'Nome do Contratante',
-        fieldPlaceholder: 'Digite o nome do contratante',
+        fields: [
+          { key: 'nome', label: 'Nome do Contratante', placeholder: 'Digite o nome', required: true },
+          { key: 'telefone', label: 'Telefone', placeholder: '(00) 00000-0000', type: 'tel' },
+          { key: 'email', label: 'E-mail', placeholder: 'email@exemplo.com', type: 'email' },
+        ],
+        initialValue: term,
       } as CreateEntityData,
     });
 
     ref.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
       if (result) {
-        this.contratanteService.create({ nome: result.nome }).pipe(takeUntil(this.destroy$)).subscribe(c => {
+        this.contratanteService.create({
+          nome: result.nome,
+          telefone: result.telefone || undefined,
+          email: result.email || undefined,
+        }).pipe(takeUntil(this.destroy$)).subscribe(c => {
           this.selectedContratante = c;
         });
       }
     });
   }
 
-  openAddLocal(): void {
+  openAddLocal(term?: string): void {
     const ref = this.dialog.open(CreateEntityDialogComponent, {
       data: {
         title: 'Novo Local',
-        fieldLabel: 'Nome do Local',
-        fieldPlaceholder: 'Digite o nome do local',
+        fields: [
+          { key: 'nome', label: 'Nome do Local', placeholder: 'Digite o nome', required: true },
+          { key: 'endereco', label: 'Endereço', placeholder: 'Rua, número' },
+          { key: 'cidade', label: 'Cidade', placeholder: 'Digite a cidade' },
+        ],
+        initialValue: term,
       } as CreateEntityData,
     });
 
     ref.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
       if (result) {
-        this.localService.create({ nome: result.nome }).pipe(takeUntil(this.destroy$)).subscribe(l => {
+        this.localService.create({
+          nome: result.nome,
+          endereco: result.endereco || undefined,
+          cidade: result.cidade || undefined,
+        }).pipe(takeUntil(this.destroy$)).subscribe(l => {
           this.selectedLocal = l;
         });
       }
@@ -164,6 +186,8 @@ export class ShowModalComponent implements OnInit, OnDestroy {
         : undefined,
       formaPagamento: value.formaPagamento,
       estilosSolicitados: this.selectedEstilos,
+      necessitaNotaFiscal: value.necessitaNotaFiscal || false,
+      notaEmitida: value.notaEmitida || false,
     };
 
     this.showService
@@ -195,6 +219,8 @@ export class ShowModalComponent implements OnInit, OnDestroy {
         : undefined,
       formaPagamento: value.formaPagamento,
       estilosSolicitados: this.selectedEstilos,
+      necessitaNotaFiscal: value.necessitaNotaFiscal || false,
+      notaEmitida: value.notaEmitida || false,
       createdAt: this.show.createdAt,
     };
 
@@ -215,8 +241,12 @@ export class ShowModalComponent implements OnInit, OnDestroy {
     if (this.show) {
       this.form.patchValue(this.show);
       this.selectedEstilos = [...this.show.estilosSolicitados];
-      this.selectedContratante = { id: this.show.contratanteId, nome: this.show.contratanteNome };
-      this.selectedLocal = { id: this.show.localId, nome: this.show.localNome };
+      this.selectedContratante = this.show.contratanteId
+        ? { id: this.show.contratanteId, nome: this.show.contratanteNome || '' }
+        : null;
+      this.selectedLocal = this.show.localId
+        ? { id: this.show.localId, nome: this.show.localNome || '' }
+        : null;
       if (this.show.dataPagamento) {
         this.form.patchValue({ dataPagamento: this.show.dataPagamento });
       }
@@ -225,10 +255,13 @@ export class ShowModalComponent implements OnInit, OnDestroy {
 
   togglePago(): void {
     if (!this.show?.id) return;
+    const prevShow = this.show;
     this.showService
       .togglePago(this.show.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe(updated => {
+        updated.contratanteNome = updated.contratanteNome || prevShow?.contratanteNome || '';
+        updated.localNome = updated.localNome || prevShow?.localNome || '';
         this.show = updated;
         if (this.show) {
           this.form.patchValue(this.show);

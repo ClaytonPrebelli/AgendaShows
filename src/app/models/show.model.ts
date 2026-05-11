@@ -2,8 +2,10 @@ export interface Show {
   id: number;
   contratanteId: number;
   contratanteNome: string;
+  contratanteTelefone?: string;
   localId: number;
   localNome: string;
+  localEndereco?: string;
   data: string;
   hora: string;
   duracao: string;
@@ -12,14 +14,18 @@ export interface Show {
   dataPagamento?: string;
   formaPagamento: string;
   estilosSolicitados: string[];
+  necessitaNotaFiscal: boolean;
+  notaEmitida: boolean;
   createdAt: string;
 }
 
 export interface ShowFormData {
   contratanteId: number | null;
   contratanteNome: string;
+  contratanteTelefone?: string;
   localId: number | null;
   localNome: string;
+  localEndereco?: string;
   data: string;
   hora: string;
   duracao: string;
@@ -27,6 +33,8 @@ export interface ShowFormData {
   pago: boolean;
   dataPagamento: string;
   formaPagamento: string;
+  necessitaNotaFiscal: boolean;
+  notaEmitida: boolean;
 }
 
 export const FORMAS_PAGAMENTO = [
@@ -34,27 +42,18 @@ export const FORMAS_PAGAMENTO = [
   'Dinheiro',
   'Cartão de Crédito',
   'Cartão de Débito',
-  'Cheque',
   'Boleto',
   'Transferência Bancária',
+  'Doação',
   'Outro',
 ];
 
 export const ESTILOS_MUSICAIS = [
-  'Samba',
-  'Pagode',
   'MPB',
-  'Pop',
+  'Pop-Rock',
   'Rock',
   'Sertanejo',
-  'Funk',
   'Forró',
-  'Axé',
-  'Bossa Nova',
-  'Jazz',
-  'Blues',
-  'Eletrônica',
-  'Gospel',
-  'Infantil',
+  'Rock Internacional',
   'Outro',
 ];

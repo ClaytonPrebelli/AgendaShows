@@ -30,8 +30,8 @@
             [searchFn]="searchLocais"
             [selectedItem]="selectedLocal"
             (selected)="onLocalSelected($event)"
-            (addNew)="openAddLocal()"
-          ></app-autocomplete-field>
+            (addNew)="openAddLocal($event)"
+           ></app-autocomplete-field>
         </div>
 
         <div class="form__group">
@@ -65,6 +65,25 @@
             <span class="form__error">Valor obrigatório</span>
           }
         </div>
+      </div>
+
+      <div class="form__row form__row--nota">
+        <div class="form__group form__group--checkbox">
+          <label class="checkbox">
+            <input type="checkbox" formControlName="necessitaNotaFiscal">
+            <span class="checkbox__mark"></span>
+            <span>Necessário emitir nota fiscal</span>
+          </label>
+        </div>
+        @if (form.get('necessitaNotaFiscal')?.value) {
+          <div class="form__group form__group--checkbox">
+            <label class="checkbox">
+              <input type="checkbox" formControlName="notaEmitida">
+              <span class="checkbox__mark"></span>
+              <span>Nota fiscal emitida</span>
+            </label>
+          </div>
+        }
       </div>
 
       <div class="form__row">
@@ -124,7 +143,7 @@
       </div>
       @if (!isEditing) {
         <span class="status-badge" [class.status-badge--paid]="show?.pago" [class.status-badge--pending]="!show?.pago">
-          {{ show?.pago ? 'Pago' : 'Pendente' }}
+          {{ show?.pago ? 'Pago' : 'Agendado' }}
         </span>
       }
     </div>
@@ -140,6 +159,18 @@
             <span class="detail-item__label">Local</span>
             <span class="detail-item__value">{{ show?.localNome }}</span>
           </div>
+          @if (show?.localEndereco) {
+            <div class="detail-item">
+              <span class="detail-item__label">Endereço</span>
+              <span class="detail-item__value">{{ show?.localEndereco }}</span>
+            </div>
+          }
+          @if (show?.contratanteTelefone) {
+            <div class="detail-item">
+              <span class="detail-item__label">Telefone</span>
+              <span class="detail-item__value">{{ show?.contratanteTelefone }}</span>
+            </div>
+          }
           <div class="detail-item">
             <span class="detail-item__label">Data</span>
             <span class="detail-item__value">{{ show?.data | date:'dd/MM/yyyy' }}</span>
@@ -180,12 +211,29 @@
             </div>
           </div>
         }
+
+        <div class="detail-nota">
+          <div class="detail-item">
+            <span class="detail-item__label">Nota Fiscal</span>
+            <span class="detail-item__value" [class.detail-item__value--yes]="show?.necessitaNotaFiscal" [class.detail-item__value--no]="!show?.necessitaNotaFiscal">
+              {{ show?.necessitaNotaFiscal ? 'Necessário' : 'Não necessário' }}
+            </span>
+          </div>
+          @if (show?.necessitaNotaFiscal) {
+            <div class="detail-item">
+              <span class="detail-item__label">Nota Emitida</span>
+              <span class="detail-item__value" [class.detail-item__value--yes]="show?.notaEmitida" [class.detail-item__value--no]="!show?.notaEmitida">
+                {{ show?.notaEmitida ? 'Sim' : 'Não' }}
+              </span>
+            </div>
+          }
+        </div>
       </div>
 
       <div class="modal__actions">
         <button class="btn btn--ghost" (click)="close()">Fechar</button>
         <button class="btn btn--outline" (click)="togglePago()">
-          {{ show?.pago ? 'Marcar Pendente' : 'Marcar Pago' }}
+          {{ show?.pago ? 'Marcar Agendado' : 'Marcar Pago' }}
         </button>
         <button class="btn btn--primary" (click)="startEditing()">Editar</button>
         <button class="btn btn--danger" (click)="deleteShow()">Excluir</button>
@@ -202,7 +250,7 @@
               [searchFn]="searchContratantes"
               [selectedItem]="selectedContratante"
               (selected)="onContratanteSelected($event)"
-              (addNew)="openAddContratante()"
+            (addNew)="openAddContratante($event)"
             ></app-autocomplete-field>
           </div>
           <div class="form__group form__group--full">
@@ -212,7 +260,7 @@
               [searchFn]="searchLocais"
               [selectedItem]="selectedLocal"
               (selected)="onLocalSelected($event)"
-              (addNew)="openAddLocal()"
+              (addNew)="openAddLocal($event)"
             ></app-autocomplete-field>
           </div>
           <div class="form__group">
@@ -231,6 +279,21 @@
             <label class="form__label">Valor (R$)</label>
             <input class="form__input" type="number" formControlName="valorCobrado" step="0.01">
           </div>
+        </div>
+
+        <div class="form__row form__row--nota">
+          <label class="checkbox">
+            <input type="checkbox" formControlName="necessitaNotaFiscal">
+            <span class="checkbox__mark"></span>
+            <span>Necessário emitir nota fiscal</span>
+          </label>
+          @if (form.get('necessitaNotaFiscal')?.value) {
+            <label class="checkbox">
+              <input type="checkbox" formControlName="notaEmitida">
+              <span class="checkbox__mark"></span>
+              <span>Nota fiscal emitida</span>
+            </label>
+          }
         </div>
 
         <div class="form__row">

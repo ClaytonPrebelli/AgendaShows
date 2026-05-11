@@ -1,0 +1,120 @@
+.modal {
+  background: #12121a;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 0;
+  max-height: 85vh;
+  overflow-y: auto;
+  width: 440px;
+  max-width: calc(100vw - 48px);
+}
+
+.modal__header {
+  text-align: center;
+  padding: 28px 28px 0;
+  position: relative;
+}
+
+.modal__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+.modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255,255,255,0.05);
+  border: none;
+  color: rgba(255,255,255,0.4);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.modal__close:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
+.modal__body {
+  padding: 24px 28px 28px;
+}
+
+.form__group--full { grid-column: 1 / -1; }
+.form__group { margin-bottom: 12px; }
+
+.form__label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.form__input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.form__input:focus {
+  border-color: #818cf8;
+}
+
+.form__error {
+  display: block;
+  color: #f87171;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.modal__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  margin-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn--ghost {
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+}
+.btn--ghost:hover { color: #fff; }
+.btn--primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+}
+.btn--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }

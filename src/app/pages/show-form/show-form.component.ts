@@ -57,6 +57,8 @@ export class ShowFormComponent implements OnInit, OnDestroy {
       pago: [false],
       dataPagamento: [''],
       formaPagamento: [''],
+      necessitaNotaFiscal: [false],
+      notaEmitida: [false],
     });
   }
 
@@ -112,36 +114,52 @@ export class ShowFormComponent implements OnInit, OnDestroy {
     this.selectedLocal = local;
   }
 
-  openAddContratante(): void {
+  openAddContratante(term?: string): void {
     const dialogRef = this.dialog.open(CreateEntityDialogComponent, {
       data: {
         title: 'Novo Contratante',
-        fieldLabel: 'Nome do Contratante',
-        fieldPlaceholder: 'Digite o nome do contratante',
+        fields: [
+          { key: 'nome', label: 'Nome do Contratante', placeholder: 'Digite o nome', required: true },
+          { key: 'telefone', label: 'Telefone', placeholder: '(00) 00000-0000', type: 'tel' },
+          { key: 'email', label: 'E-mail', placeholder: 'email@exemplo.com', type: 'email' },
+        ],
+        initialValue: term,
       } as CreateEntityData,
     });
 
     dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
       if (result) {
-        this.contratanteService.create({ nome: result.nome }).pipe(takeUntil(this.destroy$)).subscribe(c => {
+        this.contratanteService.create({
+          nome: result.nome,
+          telefone: result.telefone || undefined,
+          email: result.email || undefined,
+        }).pipe(takeUntil(this.destroy$)).subscribe(c => {
           this.selectedContratante = c;
         });
       }
     });
   }
 
-  openAddLocal(): void {
+  openAddLocal(term?: string): void {
     const dialogRef = this.dialog.open(CreateEntityDialogComponent, {
       data: {
         title: 'Novo Local',
-        fieldLabel: 'Nome do Local',
-        fieldPlaceholder: 'Digite o nome do local',
+        fields: [
+          { key: 'nome', label: 'Nome do Local', placeholder: 'Digite o nome', required: true },
+          { key: 'endereco', label: 'Endereço', placeholder: 'Rua, número' },
+          { key: 'cidade', label: 'Cidade', placeholder: 'Digite a cidade' },
+        ],
+        initialValue: term,
       } as CreateEntityData,
     });
 
     dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
       if (result) {
-        this.localService.create({ nome: result.nome }).pipe(takeUntil(this.destroy$)).subscribe(l => {
+        this.localService.create({
+          nome: result.nome,
+          endereco: result.endereco || undefined,
+          cidade: result.cidade || undefined,
+        }).pipe(takeUntil(this.destroy$)).subscribe(l => {
           this.selectedLocal = l;
         });
       }
@@ -168,6 +186,8 @@ export class ShowFormComponent implements OnInit, OnDestroy {
         : undefined,
       formaPagamento: value.formaPagamento,
       estilosSolicitados: this.selectedEstilos,
+      necessitaNotaFiscal: value.necessitaNotaFiscal || false,
+      notaEmitida: value.notaEmitida || false,
     };
 
     const request$ =

@@ -21,12 +21,12 @@
   box-sizing: border-box;
 }
 .form__input:focus {
-  border-color: #c084fc;
+  border-color: #818cf8;
 }
 
 .form__error {
   display: block;
-  color: #f5576c;
+  color: #f87171;
   font-size: 0.75rem;
   margin-top: 4px;
 }
@@ -72,7 +72,7 @@
   width: 16px;
   height: 16px;
   border: 2px solid rgba(255,255,255,0.1);
-  border-top-color: #c084fc;
+  border-top-color: #818cf8;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
@@ -103,7 +103,7 @@
   transition: background 0.15s;
 }
 .autocomplete-field__option:hover {
-  background: rgba(192, 132, 252, 0.1);
+  background: rgba(129, 140, 248, 0.1);
 }
 .autocomplete-field__option--empty {
   color: rgba(255,255,255,0.3);
@@ -112,9 +112,9 @@
 }
 .autocomplete-field__option--add {
   border-top: 1px solid rgba(255,255,255,0.06);
-  color: #c084fc;
+  color: #818cf8;
   font-weight: 600;
 }
 .autocomplete-field__option--add:hover {
-  background: rgba(192, 132, 252, 0.12);
+  background: rgba(129, 140, 248, 0.12);
 }

@@ -18,7 +18,7 @@ export class AutocompleteFieldComponent implements OnInit, OnDestroy, OnChanges 
   @Input() selectedItem: any = null;
   @Input() initialLabel = '';
   @Output() selected = new EventEmitter<any>();
-  @Output() addNew = new EventEmitter<void>();
+  @Output() addNew = new EventEmitter<string>();
 
   searchControl = new FormControl('');
   filteredItems: any[] = [];
@@ -103,6 +103,6 @@ export class AutocompleteFieldComponent implements OnInit, OnDestroy, OnChanges 
 
   onAddNew(): void {
     this.showDropdown = false;
-    this.addNew.emit();
+    this.addNew.emit(this.searchControl.value?.trim() || '');
   }
 }

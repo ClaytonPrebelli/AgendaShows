@@ -9,13 +9,15 @@
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="modal__body">
-    <div class="form__group form__group--full">
-      <label class="form__label">{{ data.fieldLabel }}</label>
-      <input class="form__input" type="text" formControlName="nome" [placeholder]="data.fieldPlaceholder" autofocus>
-      @if (form.get('nome')?.invalid && form.get('nome')?.touched) {
-        <span class="form__error">Campo obrigatório</span>
-      }
-    </div>
+    @for (field of fields; track field.key) {
+      <div class="form__group form__group--full">
+        <label class="form__label">{{ field.label }}</label>
+        <input class="form__input" [type]="field.type || 'text'" [formControlName]="field.key" [placeholder]="field.placeholder" [attr.autofocus]="field.key === 'nome' ? true : null">
+        @if (form.get(field.key)?.invalid && form.get(field.key)?.touched) {
+          <span class="form__error">Campo obrigatório</span>
+        }
+      </div>
+    }
 
     <div class="modal__actions">
       <button type="button" class="btn btn--ghost" (click)="close()">Cancelar</button>

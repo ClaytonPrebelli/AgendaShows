@@ -22,7 +22,7 @@
               [selectedItem]="selectedContratante"
               [initialLabel]="initialContratanteNome"
               (selected)="onContratanteSelected($event)"
-              (addNew)="openAddContratante()"
+              (addNew)="openAddContratante($event)"
             ></app-autocomplete-field>
           </div>
 
@@ -34,7 +34,7 @@
               [selectedItem]="selectedLocal"
               [initialLabel]="initialLocalNome"
               (selected)="onLocalSelected($event)"
-              (addNew)="openAddLocal()"
+              (addNew)="openAddLocal($event)"
             ></app-autocomplete-field>
           </div>
 
@@ -70,6 +70,25 @@
             }
           </div>
         </div>
+
+      <div class="form__row form__row--nota">
+        <div class="form__group form__group--checkbox">
+          <label class="checkbox">
+            <input type="checkbox" formControlName="necessitaNotaFiscal">
+            <span class="checkbox__mark"></span>
+            <span>Necessário emitir nota fiscal</span>
+          </label>
+        </div>
+        @if (form.get('necessitaNotaFiscal')?.value) {
+          <div class="form__group form__group--checkbox">
+            <label class="checkbox">
+              <input type="checkbox" formControlName="notaEmitida">
+              <span class="checkbox__mark"></span>
+              <span>Nota fiscal emitida</span>
+            </label>
+          </div>
+        }
+      </div>
 
         <div class="form__row">
           <div class="form__group form__group--checkbox">

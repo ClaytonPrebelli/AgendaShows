@@ -70,7 +70,7 @@
   box-sizing: border-box;
 }
 .form__input:focus {
-  border-color: #c084fc;
+  border-color: #818cf8;
 }
 .form__select {
   appearance: none;
@@ -82,13 +82,19 @@
 .form__select option { background: #1a1a2e; color: #fff; }
 .form__error {
   display: block;
-  color: #f5576c;
+  color: #f87171;
   font-size: 0.75rem;
   margin-top: 4px;
 }
 
 .form__row {
   margin: 16px 0;
+}
+
+.form__row--nota {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .checkbox {
@@ -142,9 +148,9 @@
 }
 .chip:hover { border-color: rgba(255,255,255,0.2); }
 .chip--selected {
-  background: rgba(192, 132, 252, 0.15);
-  border-color: #c084fc;
-  color: #c084fc;
+  background: rgba(129, 140, 248, 0.15);
+  border-color: #818cf8;
+  color: #818cf8;
 }
 .chip__input { display: none; }
 
@@ -174,12 +180,12 @@
 }
 .btn--ghost:hover { color: #fff; }
 .btn--primary {
-  background: linear-gradient(135deg, #f093fb, #f5576c);
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: #fff;
 }
 .btn--primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(245, 87, 108, 0.3);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
 }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 

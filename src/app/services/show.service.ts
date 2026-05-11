@@ -10,8 +10,11 @@ export class ShowService {
 
   constructor(private http: HttpClient) {}
 
-  list(): Observable<Show[]> {
-    return this.http.get<any[]>(this.baseUrl).pipe(
+  list(mes?: number, ano?: number): Observable<Show[]> {
+    const params: any = {};
+    if (mes !== undefined) params.mes = mes;
+    if (ano !== undefined) params.ano = ano;
+    return this.http.get<any[]>(this.baseUrl, { params }).pipe(
       map(shows => shows.map(s => this.fromApi(s))),
     );
   }
@@ -47,17 +50,19 @@ export class ShowService {
   private toApi(show: Partial<Show>): any {
     return {
       ...show,
-      estilosSolicitados: JSON.stringify(show.estilosSolicitados || []),
+      estilosSolicitados: show.estilosSolicitados || [],
     };
   }
 
   private fromApi(data: any): Show {
     return {
       id: data.id,
-      contratanteId: data.contratanteId,
-      contratanteNome: data.contratanteNome || '',
-      localId: data.localId,
-      localNome: data.localNome || '',
+      contratanteId: data.contratante?.id ?? data.contratanteId,
+      contratanteNome: data.contratante?.nome || '',
+      contratanteTelefone: data.contratante?.telefone || undefined,
+      localId: data.local?.id ?? data.localId,
+      localNome: data.local?.nome || '',
+      localEndereco: data.local?.endereco || undefined,
       data: data.data ? data.data.split('T')[0] : data.data,
       hora: data.hora,
       duracao: data.duracao,
@@ -69,6 +74,8 @@ export class ShowService {
         typeof data.estilosSolicitados === 'string'
           ? JSON.parse(data.estilosSolicitados || '[]')
           : data.estilosSolicitados,
+      necessitaNotaFiscal: data.necessitaNotaFiscal ?? false,
+      notaEmitida: data.notaEmitida ?? false,
       createdAt: data.createdAt,
     };
   }

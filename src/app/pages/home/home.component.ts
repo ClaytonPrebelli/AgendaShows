@@ -39,6 +39,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     receita: number;
   } | null = null;
 
+  monthStats: {
+    receitaTotal: number;
+    receitaRecebida: number;
+    receitaPrevista: number;
+  } | null = null;
+
   currentYear = new Date().getFullYear();
   currentMonth = new Date().getMonth();
   selectedDate: string | null = null;
@@ -68,7 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.load();
+    this.load(this.currentMonth + 1, this.currentYear);
   }
 
   ngOnDestroy(): void {
@@ -76,9 +82,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  load(): void {
+  reload(): void {
+    this.load(this.currentMonth + 1, this.currentYear);
+  }
+
+  private load(mes?: number, ano?: number): void {
     this.showService
-      .list()
+      .list(mes, ano)
       .pipe(takeUntil(this.destroy$))
       .subscribe(shows => {
         this.shows = shows.sort(
@@ -168,19 +178,32 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.calendarDays = days;
+    this.calcMonthStats();
 
     if (!this.selectedDate || !this.showsByDate.has(this.selectedDate)) {
-      const firstShowDate = this.showsByDate.keys().next().value;
-      if (firstShowDate) {
-        this.selectDay(firstShowDate);
-      } else {
-        this.selectedDate = null;
-        this.selectedDayShows = [];
-        this.dayGroups = [];
-      }
+      this.selectDay(todayStr);
     } else {
       this.selectDay(this.selectedDate);
     }
+  }
+
+  get yearRange(): number[] {
+    const year = new Date().getFullYear();
+    const range: number[] = [];
+    for (let y = year - 10; y <= year + 10; y++) {
+      range.push(y);
+    }
+    return range;
+  }
+
+  onMonthChange(event: Event): void {
+    this.currentMonth = Number((event.target as HTMLSelectElement).value);
+    this.reload();
+  }
+
+  onYearChange(event: Event): void {
+    this.currentYear = Number((event.target as HTMLSelectElement).value);
+    this.reload();
   }
 
   goToPrevMonth(): void {
@@ -190,7 +213,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       this.currentMonth--;
     }
-    this.buildCalendar();
+    this.reload();
   }
 
   goToNextMonth(): void {
@@ -200,7 +223,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       this.currentMonth++;
     }
-    this.buildCalendar();
+    this.reload();
   }
 
   goToToday(): void {
@@ -216,6 +239,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.selectedDate = dateStr;
     this.selectedDayShows = this.showsByDate.get(dateStr) || [];
     this.buildDayGroups();
+  }
+
+  private calcMonthStats(): void {
+    const monthShows = this.shows.filter(s => {
+      const parts = s.data.split('-');
+      if (parts.length !== 3) return false;
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      return year === this.currentYear && month === this.currentMonth;
+    });
+
+    const total = monthShows.reduce((acc, s) => acc + s.valorCobrado, 0);
+    const recebida = monthShows.filter(s => s.pago).reduce((acc, s) => acc + s.valorCobrado, 0);
+    const prevista = monthShows.filter(s => !s.pago).reduce((acc, s) => acc + s.valorCobrado, 0);
+
+    this.monthStats = { receitaTotal: total, receitaRecebida: recebida, receitaPrevista: prevista };
   }
 
   formatDateKey(year: number, month: number, day: number): string {
@@ -259,7 +298,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
       if (result?.created) {
-        this.load();
+        this.reload();
       }
     });
   }
@@ -270,7 +309,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     dialogRef.closed.pipe(takeUntil(this.destroy$)).subscribe((result: any) => {
       if (result?.updated || result?.deleted) {
-        this.load();
+        this.reload();
       }
     });
   }
@@ -279,7 +318,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showService
       .togglePago(id)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.load());
+      .subscribe(() => this.reload());
   }
 
   deleteShow(id: number): void {
@@ -287,7 +326,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.showService
         .delete(id)
         .pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.load());
+        .subscribe(() => this.reload());
     }
   }
 }
