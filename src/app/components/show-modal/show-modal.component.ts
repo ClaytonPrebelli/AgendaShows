@@ -11,6 +11,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AutocompleteFieldComponent } from '../../components/autocomplete-field/autocomplete-field.component';
 import { CreateEntityDialogComponent, CreateEntityData } from '../../components/create-entity-dialog/create-entity-dialog.component';
 import { Subject, takeUntil } from 'rxjs';
+import { CurrencyMaskDirective } from '../../directives/currency-mask.directive';
 
 export interface ModalData {
   mode: 'add' | 'view';
@@ -27,7 +28,7 @@ export interface ModalResult {
 @Component({
   selector: 'app-show-modal',
   standalone: true,
-  imports: [ReactiveFormsModule, CurrencyPipe, DatePipe, AutocompleteFieldComponent],
+  imports: [ReactiveFormsModule, CurrencyPipe, DatePipe, AutocompleteFieldComponent, CurrencyMaskDirective],
   templateUrl: './show-modal.component.html',
   styleUrl: './show-modal.component.scss',
   encapsulation: ViewEncapsulation.None,

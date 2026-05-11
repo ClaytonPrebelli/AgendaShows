@@ -16,11 +16,12 @@ import { Local } from '../../models/local.model';
 import { AutocompleteFieldComponent } from '../../components/autocomplete-field/autocomplete-field.component';
 import { CreateEntityDialogComponent, CreateEntityData } from '../../components/create-entity-dialog/create-entity-dialog.component';
 import { Subject, takeUntil } from 'rxjs';
+import { CurrencyMaskDirective } from '../../directives/currency-mask.directive';
 
 @Component({
   selector: 'app-show-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, AutocompleteFieldComponent],
+  imports: [ReactiveFormsModule, RouterLink, AutocompleteFieldComponent, CurrencyMaskDirective],
   templateUrl: './show-form.component.html',
   styleUrl: './show-form.component.scss',
 })

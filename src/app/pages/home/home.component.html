@@ -54,14 +54,14 @@
         </button>
         <div class="calendar__nav-title">
           <button class="calendar__nav-btn calendar__nav-btn--today" (click)="goToToday()" title="Hoje">Hoje</button>
-          <select class="calendar__month-select" [value]="currentMonth" (change)="onMonthChange($event)">
+          <select class="calendar__month-select" (change)="onMonthChange($event)">
             @for (month of monthNames; track $index) {
-              <option [value]="$index">{{ month }}</option>
+              <option [value]="$index" [selected]="currentMonth === $index">{{ month }}</option>
             }
           </select>
-          <select class="calendar__year-select" [value]="currentYear" (change)="onYearChange($event)">
+          <select class="calendar__year-select" (change)="onYearChange($event)">
             @for (year of yearRange; track year) {
-              <option [value]="year">{{ year }}</option>
+              <option [value]="year" [selected]="currentYear === year">{{ year }}</option>
             }
           </select>
         </div>

@@ -74,6 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.buildCalendar();
     this.load(this.currentMonth + 1, this.currentYear);
   }
 
