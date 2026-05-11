@@ -12,7 +12,29 @@
     </div>
   </section>
 
-  @if (stats) {
+  @if (loading) {
+    <section class="skeleton">
+      <div class="skeleton__stats">
+        <div class="skeleton__card"></div>
+        <div class="skeleton__card"></div>
+        <div class="skeleton__card"></div>
+        <div class="skeleton__card"></div>
+        <div class="skeleton__card"></div>
+        <div class="skeleton__card"></div>
+      </div>
+      <div class="skeleton__grid">
+        @for (row of skeletonRows; track row) {
+          <div class="skeleton__row">
+            @for (col of skeletonCols; track col) {
+              <div class="skeleton__cell"></div>
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  @if (!loading && stats) {
     <section class="stats">
       <div class="stat-card stat-card--total">
         <span class="stat-card__value">{{ stats.total }}</span>
@@ -29,7 +51,7 @@
     </section>
   }
 
-  @if (monthStats) {
+  @if (!loading && monthStats) {
     <section class="stats stats--month">
       <div class="stat-card stat-card--month-total">
         <span class="stat-card__value">{{ monthStats.receitaTotal | currency:'BRL' }}</span>
@@ -119,7 +141,7 @@
         <div class="day-detail__header">
           <div class="day-detail__header-left">
             <h3 class="day-detail__title">
-              <span class="day-detail__date">{{ selectedDate | date:'EEEE, dd \'de\' MMMM \'de\' yyyy' }}</span>
+              <span class="day-detail__date">{{ formatDayHeader(selectedDate) }}</span>
             </h3>
             <span class="day-detail__count">{{ selectedDayShows.length }} show{{ selectedDayShows.length > 1 ? 's' : '' }}</span>
           </div>

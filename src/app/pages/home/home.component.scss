@@ -632,6 +632,44 @@
   .calendar__event-name { font-size: 0.6rem; }
 }
 
+.skeleton {
+  padding: 16px 0;
+}
+.skeleton__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.skeleton__card {
+  height: 72px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+.skeleton__grid {
+  background: rgba(255,255,255,0.02);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.skeleton__row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.skeleton__row:last-child { border-bottom: none; }
+.skeleton__cell {
+  height: 80px;
+  border-right: 1px solid rgba(255,255,255,0.03);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+.skeleton__cell:last-child { border-right: none; }
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
 @media (max-width: 768px) {
   .calendar__cell { min-height: 56px; padding: 3px; }
   .calendar__day-num { width: 24px; height: 24px; font-size: 0.75rem; }

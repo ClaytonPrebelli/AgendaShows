@@ -6,7 +6,7 @@ import { Show } from '../../models/show.model';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ShowModalComponent, ModalData, ModalResult } from '../../components/show-modal/show-modal.component';
 import { DayDetailDialogComponent, DayDetailData } from '../../components/day-detail-dialog/day-detail-dialog.component';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, finalize } from 'rxjs';
 
 interface CalendarDay {
   day: number;
@@ -60,6 +60,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   ];
 
   readonly weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  readonly skeletonRows = [1, 2, 3, 4, 5, 6];
+  readonly skeletonCols = [1, 2, 3, 4, 5, 6, 7];
 
   private readonly periods: { key: string; label: string; icon: string; min: number; max: number }[] = [
     { key: 'manha', label: 'Manhã', icon: '🌅', min: 6, max: 11 },
@@ -67,6 +69,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     { key: 'noite', label: 'Noite', icon: '🌙', min: 18, max: 23 },
   ];
 
+  loading = false;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -89,9 +92,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private load(mes?: number, ano?: number): void {
+    this.loading = true;
     this.showService
       .list(mes, ano)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.loading = false),
+      )
       .subscribe(shows => {
         this.shows = shows.sort(
           (a, b) =>
@@ -235,6 +242,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.buildCalendar();
     const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     this.selectDay(todayStr);
+    this.reload();
   }
 
   selectDay(dateStr: string): void {
@@ -261,6 +269,16 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   formatDateKey(year: number, month: number, day: number): string {
     return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  }
+
+  formatDayHeader(dateStr: string): string {
+    const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    const d = new Date(dateStr + 'T12:00:00');
+    const dayName = weekDays[d.getDay()];
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${dayName} - ${day}/${month}/${year}`;
   }
 
   getPeriod(hora: string): string {

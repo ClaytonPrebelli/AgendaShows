@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { DIALOG_DATA, DialogRef, Dialog } from '@angular/cdk/dialog';
 import { ShowService } from '../../services/show.service';
 import { Show } from '../../models/show.model';
@@ -14,12 +14,12 @@ export interface DayDetailData {
 @Component({
   selector: 'app-day-detail-dialog',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe],
+  imports: [CurrencyPipe],
   template: `
     <div class="day-detail">
       <div class="day-detail__header">
         <div class="day-detail__header-left">
-          <h3 class="day-detail__title">{{ data.date | date:'EEEE, dd \\'de\\' MMMM \\'de\\' yyyy' }}</h3>
+          <h3 class="day-detail__title">{{ dayHeader }}</h3>
           <span class="day-detail__count">{{ data.shows.length }} show{{ data.shows.length > 1 ? 's' : '' }}</span>
         </div>
         <button (click)="openAddShow()" class="day-detail__add-btn">
@@ -166,11 +166,21 @@ export class DayDetailDialogComponent implements OnDestroy {
   dayGroups: { period: string; label: string; shows: Show[] }[] = [];
   private destroy$ = new Subject<void>();
 
+  private readonly weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
   private readonly periods = [
     { key: 'manha', label: 'Manhã', min: 6, max: 11 },
     { key: 'tarde', label: 'Tarde', min: 12, max: 17 },
     { key: 'noite', label: 'Noite', min: 18, max: 23 },
   ];
+
+  get dayHeader(): string {
+    const d = new Date(this.data.date + 'T12:00:00');
+    const dayName = this.weekDays[d.getDay()];
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${dayName} - ${day}/${month}/${year}`;
+  }
 
   constructor(
     @Inject(DIALOG_DATA) public data: DayDetailData,
