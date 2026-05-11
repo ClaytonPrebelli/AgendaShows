@@ -29,6 +29,6 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/agenda-clayton/
+          local-dir: ./dist/agenda-clayton/browser/
           server-dir: /agenda/
           log-level: standard
