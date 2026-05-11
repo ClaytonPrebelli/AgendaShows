@@ -21,7 +21,7 @@ jobs:
         run: npm ci
 
       - name: Build Angular app
-        run: npx ng build --base-href=/agenda/ --configuration production
+        run: npx ng build --base-href=/ --configuration production
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
